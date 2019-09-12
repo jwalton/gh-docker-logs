@@ -28,11 +28,11 @@ if (dest) {
     fs.mkdirSync(dest, { recursive: true });
 }
 
-const ps = run('docker ps --format "table {{.ID}},{{.Image}}" --no-trunc');
-// `slice(1)` to remove the 'CONTAINER_ID,IMAGE' header.
+const ps = run('docker ps -a --format "table {{.ID}},{{.Image}},{{.Names}}" --no-trunc');
+// `slice(1)` to remove the 'CONTAINER_ID,IMAGE,NAMES' header.
 const psLines = ps.split(/\r?\n/).slice(1);
 
-const usedFilenames = {};
+console.log(`Found ${psLines.lenght} containers...\n`);
 
 for (const line of psLines) {
     if (!line) {
@@ -40,23 +40,17 @@ for (const line of psLines) {
         continue;
     }
 
-    const [containerId, image] = line.split(',');
+    const [containerId, image, containerName] = line.split(',');
 
     if (!dest) {
-        console.log('*********************************************************');
-        console.log(image);
-        console.log('*********************************************************\n');
+        console.log('**********************************************************************');
+        console.log(`* Image: ${image}`);
+        console.log(`* Name : ${containerName}`);
+        console.log('**********************************************************************');
 
         run(`docker logs ${containerId}`, { passthrough: true });
     } else {
-        let suffix = '';
-        if (!usedFilenames[image]) {
-            usedFilenames[image] = 1;
-        } else {
-            suffix = `-${usedFilenames[image]}`;
-            usedFilenames[image]++;
-        }
-        const filename = `${image.replace(/[\/:]/g, '-')}${suffix}.log`;
+        const filename = `${containerName.replace(/[\/:]/g, '-')}${suffix}.log`;
         const file = path.resolve(dest, filename);
         console.log(`Writing ${file}`);
         const out = fs.openSync(file, 'w');

@@ -9,9 +9,7 @@ folder (where you can tar them up and
 
 - `dest` - Destination folder to write to. If not provided, logs will be
   written to stdout. If provided, the folder will be created if it doesn't
-  exist, and files will be written based on image names (e.g. 'redis.log').
-  If there is more than one container running with the same image namge, log
-  files will be suffixed with a "-1", "-2", etc.. for all logs except the first.
+  exist, and files will be written based on container names (e.g. 'redis.log').
 
 ## Usage
 
