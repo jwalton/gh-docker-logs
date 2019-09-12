@@ -1,0 +1,14 @@
+name: Collect Docker Logs
+author: jwalton
+description: Collect logs from all docker containers.
+inputs:
+  dest:
+    description: |
+      If provided, a folder to put logs in.  If not provided, logs will be
+      sent to the screen.
+runs:
+  using: node12
+  main: 'main.js'
+branding:
+  icon: align-left
+  color: blue
