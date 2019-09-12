@@ -4,6 +4,10 @@ const path = require('path');
 const core = require('@actions/core');
 
 const dest = core.getInput('dest') || undefined;
+const images = core.getInput('images') || undefined;
+const tail = core.getInput('images') || 'all';
+
+const imagesFilter = typeof images === 'string' ? images.split(',') : undefined;
 
 function run(cmd, options = {}) {
     let stdio;
@@ -24,39 +28,61 @@ function run(cmd, options = {}) {
     });
 }
 
+function getContainers() {
+    const ps = run(
+        'docker ps -a --format "table {{.ID}},{{.Image}},{{.Names}},{{.Status}}" --no-trunc'
+    );
+    // `slice(1)` to remove the 'CONTAINER_ID,IMAGE,NAMES' header.
+    const psLines = ps.split(/\r?\n/).slice(1);
+
+    return (
+        psLines
+            // Last line is empty - skip it.
+            .filter(line => !!line)
+            .map(line => {
+                const [id, image, name, status] = line.split(',');
+                return { id, image, name, status };
+            })
+    );
+}
+
+function filterContainers(containers) {
+    return containers.filter(
+        container =>
+            !imagesFilter ||
+            imagesFilter.includes(container.image) ||
+            imagesFilter.some(filter => container.image.startsWith(`${filter}:`))
+    );
+}
+
 if (dest) {
     fs.mkdirSync(dest, { recursive: true });
 }
 
-const ps = run(
-    'docker ps -a --format "table {{.ID}},{{.Image}},{{.Names}}.{{.Status}}" --no-trunc'
-);
-// `slice(1)` to remove the 'CONTAINER_ID,IMAGE,NAMES' header.
-const psLines = ps.split(/\r?\n/).slice(1);
+const containers = getContainers();
+console.log(`Found ${containers.length} containers...`);
+const filteredContainers = filterContainers(containers);
+if (imagesFilter) {
+    console.log(`Found ${filteredContainers.length} matching containers...`);
+}
+console.log('\n');
 
-console.log(`Found ${psLines.lenght} containers...\n`);
+const logsOptions = tail ? `--tail ${tail} ` : '';
 
-for (const line of psLines) {
-    if (!line) {
-        // Last line is an empty line, just skip it.
-        continue;
-    }
-
-    const [containerId, image, containerName, containerStatus] = line.split(',');
-
+for (const container of filteredContainers) {
     if (!dest) {
         console.log('**********************************************************************');
-        console.log(`* Name  : ${containerName}`);
-        console.log(`* Image : ${image}`);
-        console.log(`* Status: ${containerStatus}`);
+        console.log(`* Name  : ${container.name}`);
+        console.log(`* Image : ${container.image}`);
+        console.log(`* Status: ${container.status}`);
         console.log('**********************************************************************');
 
-        run(`docker logs ${containerId}`, { passthrough: true });
+        run(`docker logs ${logsOptions} ${container.id}`, { passthrough: true });
     } else {
-        const filename = `${containerName.replace(/[\/:]/g, '-')}${suffix}.log`;
+        const filename = `${container.name.replace(/[\/:]/g, '-')}.log`;
         const file = path.resolve(dest, filename);
         console.log(`Writing ${file}`);
         const out = fs.openSync(file, 'w');
-        run(`docker logs ${containerId}`, { out });
+        run(`docker logs ${logsOptions}  ${container.id}`, { out });
     }
 }

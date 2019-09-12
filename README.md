@@ -11,6 +11,13 @@ folder (where you can tar them up and
   written to stdout. If provided, the folder will be created if it doesn't
   exist, and files will be written based on container names (e.g. 'redis.log').
 
+- `images` - A comma delimited list of image names. If provided, only output
+  from containers with these images will be shown. Containers will match if
+  the image matches exactly (e.g. "mongo:3.4.22") or if the image name matches
+  without a tag (e.g. "mongo" will match "mongo:3.4.22").
+
+- `tail` - Max number of lines to show from each container.  Defaults to "all".
+
 ## Usage
 
 ## Dump all logs on a failure
@@ -19,6 +26,17 @@ folder (where you can tar them up and
 - name: Dump docker logs on failure
   if: failure()
   uses: jwalton/gh-docker-logs@v1
+```
+
+## Dump redis and mongodb logs
+
+```yaml
+- name: Dump redis logs
+  uses: jwalton/gh-docker-logs@v1
+  with:
+    images: 'redis,mongo'
+    # Only show last 100 lines of each
+    tail: '100'
 ```
 
 ## Upload tarball as artifact
