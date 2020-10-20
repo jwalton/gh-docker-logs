@@ -6,6 +6,7 @@ const core = require('@actions/core');
 const dest = core.getInput('dest') || undefined;
 const images = core.getInput('images') || undefined;
 const tail = core.getInput('images') || 'all';
+const shell = core.getInput('shell') || '/bin/bash';
 
 const imagesFilter = typeof images === 'string' ? images.split(',') : undefined;
 
@@ -21,7 +22,7 @@ function run(cmd, options = {}) {
     }
 
     return execSync(cmd, {
-        shell: '/bin/bash',
+        shell,
         encoding: 'utf-8',
         env: process.env,
         stdio,
