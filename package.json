@@ -4,7 +4,7 @@
   "description": "Collect logs from all running docker containers.",
   "main": "main.js",
   "dependencies": {
-    "@actions/core": "^1.1.0"
+    "@actions/core": "^1.2.6"
   },
   "devDependencies": {},
   "scripts": {
