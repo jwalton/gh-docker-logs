@@ -18,6 +18,8 @@ folder (where you can tar them up and
 
 - `tail` - Max number of lines to show from each container.  Defaults to "all".
 
+- `shell` - Shell to execute commands.  Defaults to "/bin/bash".
+
 ## Usage
 
 ## Dump all logs on a failure
@@ -55,4 +57,14 @@ folder (where you can tar them up and
   with:
     name: logs.tgz
     path: ./logs.tgz
+```
+
+## Dump all logs on a failure using different shell
+
+```yaml
+- name: Dump docker logs on failure using different shell
+  if: failure()
+  uses: jwalton/gh-docker-logs@v1
+  with:
+    shell: '/bin/sh'
 ```
