@@ -18,7 +18,7 @@ folder (where you can tar them up and
 
 - `tail` - Max number of lines to show from each container.  Defaults to "all".
 
-- `shell` - Shell to execute commands.  Defaults to "/bin/bash".
+- `shell` - Shell to execute commands.  Defaults to "/bin/sh".
 
 ## Usage
 
