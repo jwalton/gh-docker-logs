@@ -1,0 +1,28 @@
+{
+  "name": "gh-docker-logs",
+  "version": "1.0.0",
+  "description": "Collect logs from all running docker containers.",
+  "main": "main.js",
+  "dependencies": {
+    "@actions/core": "^1.1.0"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/jwalton/gh-docker-logs.git"
+  },
+  "keywords": [
+    "github",
+    "actions",
+    "docker"
+  ],
+  "author": "Jason Walton",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/jwalton/gh-docker-logs/issues"
+  },
+  "homepage": "https://github.com/jwalton/gh-docker-logs#readme"
+}
