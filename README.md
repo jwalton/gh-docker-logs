@@ -53,6 +53,7 @@ folder (where you can tar them up and
   if: failure()
   run: tar cvzf ./logs.tgz ./logs
 - name: Upload logs to GitHub
+  if: failure()
   uses: actions/upload-artifact@master
   with:
     name: logs.tgz
