@@ -19,6 +19,8 @@ inputs:
   shell:
     description: Shell to execute commands. Defaults to "/bin/sh".
     default: /bin/sh
+  artifact:
+    description: When provided the collected logs will be stored as this name.
 
 runs:
   using: node12

@@ -2,11 +2,17 @@ const { execSync } = require('child_process');
 const fs = require('fs');
 const path = require('path');
 const core = require('@actions/core');
+const {create: createArtifactClient, UploadOptions} = require('@actions/artifact');
 
-const dest = core.getInput('dest') || undefined;
+let dest = core.getInput('dest') || undefined;
 const images = core.getInput('images') || undefined;
 const tail = core.getInput('images') || undefined;
 const shell = core.getInput('shell') || undefined;
+const artifact = core.getInput('artifact') || undefined;
+
+if (artifact && !dest) {
+    dest = '/tmp/gh_docker_logs';
+}
 
 const imagesFilter = typeof images === 'string' ? images.split(',') : undefined;
 
@@ -69,6 +75,7 @@ if (imagesFilter) {
 console.log('\n');
 
 const logsOptions = tail ? `--tail ${tail} ` : '';
+let createdFileNames = [];
 
 for (const container of filteredContainers) {
     if (!dest) {
@@ -85,5 +92,28 @@ for (const container of filteredContainers) {
         console.log(`Writing ${file}`);
         const out = fs.openSync(file, 'w');
         run(`docker logs ${logsOptions}  ${container.id}`, { out });
+        createdFileNames.push(file);
+    }
+}
+
+if (artifact) {
+    const artifactClient = createArtifactClient();
+    const uploadResult = await artifactClient.uploadArtifact(
+        artifact,
+        createdFileNames,
+        dest,
+        {
+            continueOnError: false
+        }
+    )
+
+    if (uploadResult.failedItems.length > 0) {
+        console.log(
+          `Docker logs could not be stored as artifact. There are ${uploadResult.failedItems.length} that could not be saved.`
+        )
+    } else {
+        console.log(
+          `Docker logs stored as artifact: ${uploadResult.artifactName}`
+        )
     }
 }
