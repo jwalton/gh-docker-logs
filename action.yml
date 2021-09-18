@@ -7,17 +7,21 @@ inputs:
       Destination folder to write to. If not provided, logs will be written to
       stdout. If provided, the folder will be created if it doesn't exist, and
       files will be written based on container names (e.g. 'redis.log').
+    required: false
   images:
     description: |
       A comma delimited list of image names. If provided, only output from
       containers with these images will be shown. Containers will match if the
       image matches exactly (e.g. "mongo:3.4.22") or if the image name matches
       without a tag (e.g. "mongo" will match "mongo:3.4.22").
+    required: false
   tail:
     description: Max number of lines to show from each container. Defaults to "all".
+    required: false
     default: all
   shell:
     description: Shell to execute commands. Defaults to "/bin/sh".
+    required: false
     default: /bin/sh
 
 runs:
