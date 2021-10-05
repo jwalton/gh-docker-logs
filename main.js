@@ -5,8 +5,8 @@ const core = require('@actions/core');
 
 const dest = core.getInput('dest') || undefined;
 const images = core.getInput('images') || undefined;
-const tail = core.getInput('tail') || 'all';
-const shell = core.getInput('shell') || '/bin/sh';
+const tail = core.getInput('tail');
+const shell = core.getInput('shell');
 
 const imagesFilter = typeof images === 'string' ? images.split(',') : undefined;
 
