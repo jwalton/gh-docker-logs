@@ -72,7 +72,7 @@ const logsOptions = tail ? `--tail ${tail} ` : '';
 
 for (const container of filteredContainers) {
     if (!dest) {
-        console.log(`::group::${container.name}`);
+        console.log(`::group::${container.image} (${container.name})`);
         console.log('**********************************************************************');
         console.log(`* Name  : ${container.name}`);
         console.log(`* Image : ${container.image}`);
