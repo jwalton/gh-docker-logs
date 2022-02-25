@@ -72,6 +72,7 @@ const logsOptions = tail ? `--tail ${tail} ` : '';
 
 for (const container of filteredContainers) {
     if (!dest) {
+        console.log(`::group::${container.image} (${container.name})`);
         console.log('**********************************************************************');
         console.log(`* Name  : ${container.name}`);
         console.log(`* Image : ${container.image}`);
@@ -79,6 +80,7 @@ for (const container of filteredContainers) {
         console.log('**********************************************************************');
 
         run(`docker logs ${logsOptions} ${container.id}`, { passthrough: true });
+        console.log(`::endgroup::`);
     } else {
         const filename = `${container.name.replace(/[\/:]/g, '-')}.log`;
         const file = path.resolve(dest, filename);
