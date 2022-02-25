@@ -74,7 +74,6 @@ for (const container of filteredContainers) {
     if (!dest) {
         console.log(`::group::${container.name}`);
         console.log('**********************************************************************');
-        console.log('**********************************************************************');
         console.log(`* Name  : ${container.name}`);
         console.log(`* Image : ${container.image}`);
         console.log(`* Status: ${container.status}`);
