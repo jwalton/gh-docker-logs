@@ -19,7 +19,7 @@ jobs:
       - run: docker pull ubuntu:22.10
       - run: npm run all
       - name: Run a docker container
-        run: docker run --name=test-container ubuntu:22.10 echo "This is a test"
+        run: docker run --name=test-container ubuntu:22.10 /bin/sh -c '>&2 echo error1 && echo test message && >&2 echo error2'
       - name: test
         uses: ./
       - name: Semantic-release
