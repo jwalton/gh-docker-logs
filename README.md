@@ -1,5 +1,7 @@
 # Collect Docker Logs
 
+[![semantic-release](https://img.shields.io/badge/%20%20%F0%9F%93%A6%F0%9F%9A%80-semantic--release-e10079.svg)](https://github.com/semantic-release/semantic-release)
+
 This is a GitHub Action which will collect logs from all running docker
 containers. Logs can either be dumped to stdout, or can be written to a
 folder (where you can tar them up and
