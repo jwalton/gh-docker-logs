@@ -29,14 +29,14 @@ folder (where you can tar them up and
 ```yaml
 - name: Dump docker logs on failure
   if: failure()
-  uses: jwalton/gh-docker-logs@v1
+  uses: jwalton/gh-docker-logs@v2
 ```
 
 ## Dump redis and mongodb logs
 
 ```yaml
 - name: Dump redis logs
-  uses: jwalton/gh-docker-logs@v1
+  uses: jwalton/gh-docker-logs@v2
   with:
     images: 'redis,mongo'
     # Only show last 100 lines of each
@@ -48,7 +48,7 @@ folder (where you can tar them up and
 ```yaml
 - name: Collect docker logs on failure
   if: failure()
-  uses: jwalton/gh-docker-logs@v1
+  uses: jwalton/gh-docker-logs@v2
   with:
     dest: './logs'
 - name: Tar logs
@@ -67,7 +67,7 @@ folder (where you can tar them up and
 ```yaml
 - name: Dump docker logs on failure using different shell
   if: failure()
-  uses: jwalton/gh-docker-logs@v1
+  uses: jwalton/gh-docker-logs@v2
   with:
     shell: '/bin/sh'
 ```
