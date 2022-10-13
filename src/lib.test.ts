@@ -2,7 +2,7 @@
  * @jest-environment node
  */
 
-import { exec } from 'child_process';
+import { exec, execSync } from 'child_process';
 import fs from 'fs/promises';
 import path from 'path';
 
@@ -13,25 +13,15 @@ const { expect } = chai;
 
 const CONTAINER_NAME = 'docker-gh-logs-tester';
 const CONTAINER_IMAGE = 'ubuntu:22.10';
-const CONTAINER_START_TIMEOUT = 4000;
 const TEMP_DIR = path.resolve(__dirname, 'testOut');
 
-async function sleep(ms: number) {
-    await new Promise((resolve) => {
-        setTimeout(resolve, ms);
-    });
+function startContainer() {
+    execSync(`docker run --name=${CONTAINER_NAME} ${CONTAINER_IMAGE} echo "foo"`);
 }
 
-async function startContainer() {
-    await exec(`docker run --name=${CONTAINER_NAME} ${CONTAINER_IMAGE} echo "foo"`);
-    await sleep(250);
-}
-
-async function killContainer() {
+function killContainer() {
     try {
-        await exec(`docker rm -f ${CONTAINER_NAME}`);
-        // Wait a moment to give the docker process a chance to vanish.
-        await sleep(250);
+        execSync(`docker rm -f ${CONTAINER_NAME}`);
     } catch {
         // ignore
     }
@@ -51,7 +41,7 @@ describe('gh-docker-logs', () => {
 
     it('should find running containers and get logs', async () => {
         try {
-            await startContainer();
+            startContainer();
             const containers = getContainers().filter(
                 (container) => container.name === CONTAINER_NAME
             );
@@ -74,7 +64,7 @@ describe('gh-docker-logs', () => {
             const log = await fs.readFile(filename, { encoding: 'utf-8' });
             expect(log, 'log contents').to.contain('foo');
         } finally {
-            await killContainer();
+            killContainer();
         }
     });
 

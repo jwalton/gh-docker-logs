@@ -15,6 +15,8 @@ jobs:
     steps:
       - uses: actions/checkout@v3.1.0
       - run: npm install
+      # Pull this image so it will already be there for unit tests later.
+      - run: docker pull ubuntu:22.10
       - run: npm run all
       - name: Run a docker container
         run: docker run --name=test-container ubuntu:22.10 echo "This is a test"
