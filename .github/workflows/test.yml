@@ -13,7 +13,7 @@ jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3.1.0
+      - uses: actions/checkout@v3.3.0
       - run: npm install
       # Pull this image so it will already be there for unit tests later.
       - run: docker pull ubuntu:22.10
