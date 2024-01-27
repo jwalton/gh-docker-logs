@@ -15,9 +15,9 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - name: Use Node.js
-        uses: actions/setup-node@v2
+        uses: actions/setup-node@v4
         with:
-          node-version: lts
+          node-version: '20'
       - run: npm install
       # Pull this image so it will already be there for unit tests later.
       - run: docker pull ubuntu:22.10
