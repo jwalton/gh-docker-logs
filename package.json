@@ -1,6 +1,6 @@
 {
     "name": "gh-docker-logs",
-    "version": "2.2.1",
+    "version": "2.2.2",
     "description": "Collect logs from all running docker containers.",
     "main": "lib/main.js",
     "dependencies": {
